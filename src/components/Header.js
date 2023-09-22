@@ -5,12 +5,12 @@ import { BsBag } from 'react-icons/bs';
 import { CgProfile } from 'react-icons/cg';
 import { Link } from 'react-router-dom';
 import Logo from '../img/logo.svg';
-import LoginPopup from './LoginPopup'; // Import the LoginPopup component
+import LoginPopup from './LoginPopup';
 import { AuthContext } from '../contexts/AuthContext';
 
 const Header = () => {
   const [isActive, setIsActive] = useState(false);
-  const [showLoginPopup, setShowLoginPopup] = useState(false); // State to control the login pop-up
+  const [showLoginPopup, setShowLoginPopup] = useState(false); 
   const { isOpen, setIsOpen } = useContext(SidebarContext);
   const { itemAmount } = useContext(CartContext);
   const { user } = useContext(AuthContext);

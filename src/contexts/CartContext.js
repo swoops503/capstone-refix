@@ -16,7 +16,7 @@ const CartProvider = ({ children }) => {
       return accumulator + currentItem.price * currentItem.amount;
     }, 0);
     setTotal(total);
-  });
+  }, [cart]); // Add [cart] as a dependency
 
   // update item amount
   useEffect(() => {
@@ -26,7 +26,7 @@ const CartProvider = ({ children }) => {
       }, 0);
       setItemAmount(amount);
     }
-  }, [cart]);
+  }, [cart]); // Add [cart] as a dependency
 
   // add to cart
   const addToCart = (product, id) => {
