@@ -1,6 +1,4 @@
 import React from 'react';
-// import images
-import WomanImg from '../img/woman_hero.png';
 // import link
 import { Link } from 'react-router-dom';
 
@@ -12,12 +10,12 @@ const Hero = () => {
         <div className='flex flex-col justify-center'>
           {/* pretitle */}
           <div className='font-semibold flex items-center uppercase'>
-            <div className='w-10 h-[2px] bg-red-500 mr-3'></div>New Trend
+            <div className='w-10 h-[2px] bg-red-500 mr-3'></div>THE LATEST TRENDS
           </div>
           {/* title */}
           <h1 className='text-[70px] leading-[1.1] font-light mb-4'>
-            AUTUMN SALE STYLISH <br />
-            <span className='font-semibold'>WOMENS</span>
+            ELEVATE YOUR STYLE <br />
+            <span className='font-semibold'>MODA</span>
           </h1>
           <Link
             to={'/'}
@@ -28,7 +26,6 @@ const Hero = () => {
         </div>
         {/* image */}
         <div className='hidden lg:block'>
-          <img src={WomanImg} alt='' />
         </div>
       </div>
     </section>

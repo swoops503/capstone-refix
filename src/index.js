@@ -2,22 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-// product provider
 import ProductProvider from './contexts/ProductContext';
-// sidebar provider
 import SidebarProvider from './contexts/SidebarContext';
-// cart provider
 import CartProvider from './contexts/CartContext';
+import { AuthProvider } from './contexts/AuthContext'; // Import AuthProvider
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <SidebarProvider>
-    <CartProvider>
-      <ProductProvider>
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
-      </ProductProvider>
-    </CartProvider>
-  </SidebarProvider>
+  <AuthProvider> {/* Add AuthProvider */}
+    <SidebarProvider>
+      <CartProvider>
+        <ProductProvider>
+          <React.StrictMode>
+            <App />
+          </React.StrictMode>
+        </ProductProvider>
+      </CartProvider>
+    </SidebarProvider>
+  </AuthProvider> 
 );
