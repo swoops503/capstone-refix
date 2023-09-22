@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import jwtDecode from 'jwt-decode';
 
 // create context
 export const CartContext = createContext();
@@ -11,6 +12,20 @@ const CartProvider = ({ children }) => {
   // total price state
   const [total, setTotal] = useState(0);
 
+  useEffect(() => {
+  const jwt = localStorage.getItem('jwt');
+
+  if (jwt) {
+    try {
+      const payload = jwtDecode(jwt);
+      const savedCart = payload.cart || [];
+      setCart(savedCart);
+    } catch (error) {
+      console.error('Invalid JWT format:', error);
+    }
+  }
+}, []);
+  
   useEffect(() => {
     const total = cart.reduce((accumulator, currentItem) => {
       return accumulator + currentItem.price * currentItem.amount;
