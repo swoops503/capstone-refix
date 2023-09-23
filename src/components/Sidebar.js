@@ -1,19 +1,28 @@
-import React, { useContext } from 'react';
-// import link
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
-// import icons
 import { IoMdArrowForward } from 'react-icons/io';
 import { FiTrash2 } from 'react-icons/fi';
-// import components
-import CartItem from '../components/CartItem';
-// import sidebar context
-import { SidebarContext } from '../contexts/SidebarContext';
-// import cart context
-import { CartContext } from '../contexts/CartContext';
+import { SidebarContext } from '../contexts/SidebarContext'; // Import SidebarContext
+import { CartContext } from '../contexts/CartContext'; // Import CartContext
+import CartItem from './CartItem'; // Import CartItem component
+import CheckoutModal from './CheckoutModal';
+
 
 const Sidebar = () => {
   const { isOpen, handleClose } = useContext(SidebarContext);
   const { cart, clearCart, total, itemAmount } = useContext(CartContext);
+  const [isCheckoutModalOpen, setCheckoutModalOpen] = useState(false);
+  const [isCheckoutSuccessful, setCheckoutSuccessful] = useState(false);
+
+  const openCheckoutModal = () => {
+    setCheckoutModalOpen(true);
+  };
+
+  const handleCheckoutSuccess = () => {
+    setCheckoutModalOpen(false);
+    setCheckoutSuccessful(true);
+  };
+
   return (
     <div
       className={`${
@@ -24,7 +33,6 @@ const Sidebar = () => {
         <div className='uppercase text-sm font-semibold'>
           Shopping Bag ({itemAmount})
         </div>
-        {/* icon */}
         <div
           onClick={handleClose}
           className='cursor-pointer w-8 h-8 flex justify-center items-center'
@@ -39,11 +47,9 @@ const Sidebar = () => {
       </div>
       <div className='flex flex-col gap-y-3 py-4 mt-4'>
         <div className='flex w-full justify-between items-center'>
-          {/* total */}
           <div className='uppercase font-semibold'>
             <span className='mr-2'>Total:</span>$ {parseFloat(total).toFixed(2)}
           </div>
-          {/* clear cart icon */}
           <div
             onClick={clearCart}
             className='cursor-pointer py-4 bg-red-500 text-white w-12 h-12 flex justify-center items-center text-xl'
@@ -57,13 +63,40 @@ const Sidebar = () => {
         >
           View cart
         </Link>
-        <Link
-          to='/'
+        <button
+          onClick={openCheckoutModal} // Open the CheckoutModal when this button is clicked
           className='bg-primary flex p-4 justify-center items-center text-white w-full font-medium'
         >
           Checkout
-        </Link>
+        </button>
       </div>
+
+      {/* Render the CheckoutModal */}
+      <CheckoutModal
+        isOpen={isCheckoutModalOpen}
+        onClose={() => setCheckoutModalOpen(false)}
+        onCheckoutSuccess={handleCheckoutSuccess}
+      />
+
+      {/* Render the success message */}
+      {isCheckoutSuccessful && (
+        <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center'>
+          <div className='bg-white w-[50%] p-4 shadow-2xl rounded-lg'>
+            <p className='text-green-500 text-lg font-semibold text-center'>
+              Order Successful!
+            </p>
+            <p className='text-center mt-4'>
+              An email confirmation will be sent shortly.
+            </p>
+            <button
+              onClick={() => setCheckoutSuccessful(false)}
+              className='bg-primary flex p-4 justify-center items-center text-white w-full font-medium mt-4'
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
