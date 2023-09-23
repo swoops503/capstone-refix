@@ -2,17 +2,17 @@ import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoMdArrowForward } from 'react-icons/io';
 import { FiTrash2 } from 'react-icons/fi';
-import { SidebarContext } from '../contexts/SidebarContext'; // Import SidebarContext
-import { CartContext } from '../contexts/CartContext'; // Import CartContext
-import CartItem from './CartItem'; // Import CartItem component
+import { SidebarContext } from '../contexts/SidebarContext'; 
+import { CartContext } from '../contexts/CartContext'; 
+import CartItem from './CartItem'; 
 import CheckoutModal from './CheckoutModal';
 
 
 const Sidebar = () => {
-  const { isOpen, handleClose } = useContext(SidebarContext);
-  const { cart, clearCart, total, itemAmount } = useContext(CartContext);
-  const [isCheckoutModalOpen, setCheckoutModalOpen] = useState(false);
-  const [isCheckoutSuccessful, setCheckoutSuccessful] = useState(false);
+  const { isOpen, handleClose } = useContext(SidebarContext); // for opening closing sidebar
+  const { cart, clearCart, total, itemAmount } = useContext(CartContext); // cart useState
+  const [isCheckoutModalOpen, setCheckoutModalOpen] = useState(false); //popup for checkout
+  const [isCheckoutSuccessful, setCheckoutSuccessful] = useState(false); //popup for checkout success
 
   const openCheckoutModal = () => {
     setCheckoutModalOpen(true);
