@@ -1,39 +1,40 @@
 import React, { createContext, useState, useEffect } from 'react';
 import jwtDecode from 'jwt-decode';
 
-// create context
 export const CartContext = createContext();
 
 const CartProvider = ({ children }) => {
-  // cart state
+  // Cart state
   const [cart, setCart] = useState([]);
-  // item amount state
+  // Item amount state
   const [itemAmount, setItemAmount] = useState(0);
-  // total price state
+  // Total price state
   const [total, setTotal] = useState(0);
 
+  // Load cart from local storage on component mount
   useEffect(() => {
-  const jwt = localStorage.getItem('jwt');
+    const jwt = localStorage.getItem('jwt');
 
-  if (jwt) {
-    try {
-      const payload = jwtDecode(jwt);
-      const savedCart = payload.cart || [];
-      setCart(savedCart);
-    } catch (error) {
-      console.error('Invalid JWT format:', error);
+    if (jwt) {
+      try {
+        const payload = jwtDecode(jwt);
+        const savedCart = payload.cart || [];
+        setCart(savedCart);
+      } catch (error) {
+        console.error('Invalid JWT format:', error);
+      }
     }
-  }
-}, []);
-  
+  }, []);
+
+  // Calculate total price whenever the cart changes
   useEffect(() => {
-    const total = cart.reduce((accumulator, currentItem) => {
+    const newTotal = cart.reduce((accumulator, currentItem) => {
       return accumulator + currentItem.price * currentItem.amount;
     }, 0);
-    setTotal(total);
-  }, [cart]); // Add [cart] as a dependency
+    setTotal(newTotal);
+  }, [cart]);
 
-  // update item amount
+  // Calculate item amount whenever the cart changes
   useEffect(() => {
     if (cart) {
       const amount = cart.reduce((accumulator, currentItem) => {
@@ -41,18 +42,15 @@ const CartProvider = ({ children }) => {
       }, 0);
       setItemAmount(amount);
     }
-  }, [cart]); // Add [cart] as a dependency
+  }, [cart]);
 
-  // add to cart
+  // Add an item to the cart
   const addToCart = (product, id) => {
     const newItem = { ...product, amount: 1 };
-    // check if the item is already in the cart
-    const cartItem = cart.find((item) => {
-      return item.id === id;
-    });
-    // if cart item is already in the cart
+    const cartItem = cart.find((item) => item.id === id);
+
     if (cartItem) {
-      const newCart = [...cart].map((item) => {
+      const newCart = cart.map((item) => {
         if (item.id === id) {
           return { ...item, amount: cartItem.amount + 1 };
         } else {
@@ -65,30 +63,27 @@ const CartProvider = ({ children }) => {
     }
   };
 
-  // remove from cart
+  // Remove an item from the cart
   const removeFromCart = (id) => {
-    const newCart = cart.filter((item) => {
-      return item.id !== id;
-    });
+    const newCart = cart.filter((item) => item.id !== id);
     setCart(newCart);
   };
 
-  // clear cart
+  // Clear the entire cart
   const clearCart = () => {
     setCart([]);
   };
 
-  // increase amount
+  // Increase the amount of an item in the cart
   const increaseAmount = (id) => {
     const cartItem = cart.find((item) => item.id === id);
     addToCart(cartItem, id);
   };
 
-  // decrease amount
+  // Decrease the amount of an item in the cart
   const decreaseAmount = (id) => {
-    const cartItem = cart.find((item) => {
-      return item.id === id;
-    });
+    const cartItem = cart.find((item) => item.id === id);
+    
     if (cartItem) {
       const newCart = cart.map((item) => {
         if (item.id === id) {
@@ -104,6 +99,11 @@ const CartProvider = ({ children }) => {
       removeFromCart(id);
     }
   };
+
+  // Save the cart to local storage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
 
   return (
     <CartContext.Provider
