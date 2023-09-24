@@ -27,8 +27,7 @@ const LoginPopup = ({ onClose }) => { // Pass onClose as a prop
         return response.json();
       })
       .then((json) => {
-        // Assuming the API returns a token or user object upon successful login,
-        // you can pass this data to the login function and log it.
+  
         login(json); // Pass the response data to the login function
         console.log('Login successful. Response JSON:', json); // Log the JSON response
 

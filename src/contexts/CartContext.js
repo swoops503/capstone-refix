@@ -11,18 +11,10 @@ const CartProvider = ({ children }) => {
   // Total price state
   const [total, setTotal] = useState(0);
 
-  // Load cart from local storage on component mount
   useEffect(() => {
-    const jwt = localStorage.getItem('jwt');
-
-    if (jwt) {
-      try {
-        const payload = jwtDecode(jwt);
-        const savedCart = payload.cart || [];
-        setCart(savedCart);
-      } catch (error) {
-        console.error('Invalid JWT format:', error);
-      }
+    const savedCart = JSON.parse(localStorage.getItem('cart'));
+    if (savedCart) {
+      setCart(savedCart);
     }
   }, []);
 
@@ -101,7 +93,7 @@ const CartProvider = ({ children }) => {
   };
 
   // Save the cart to local storage whenever it changes
-  useEffect(() => {
+ useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
