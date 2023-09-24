@@ -1,18 +1,20 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react';
 import { IoMdArrowForward } from 'react-icons/io';
 import { FiTrash2 } from 'react-icons/fi';
 import { CartContext } from '../contexts/CartContext'; // Import CartContext
 import CartItem from './CartItem'; // Import CartItem component
-
 
 const CheckoutModal = ({ isOpen, onClose, onCheckoutSuccess }) => {
   const { cart, clearCart, total, itemAmount } = useContext(CartContext);
   const [shippingInfo, setShippingInfo] = useState({
     shippingAddress: '',
     billingAddress: '',
-    // Add more fields as needed
+    fullName: '', // New field for full name
+    city: '', // New field for city
+    state: '', // New field for state
   });
   const [isCheckoutSuccessful, setCheckoutSuccessful] = useState(false);
+  const [error, setError] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,14 +22,20 @@ const CheckoutModal = ({ isOpen, onClose, onCheckoutSuccess }) => {
   };
 
   const handleCheckout = () => {
-    setTimeout(() => {
-      setCheckoutSuccessful(true);
-      clearCart();
-    }, 2000); 
+    if (!shippingInfo.shippingAddress || !shippingInfo.billingAddress || !shippingInfo.fullName || !shippingInfo.city || !shippingInfo.state) {
+      setError('Please fill in all required fields.');
+    } else {
+      setError('');
+      setTimeout(() => {
+        setCheckoutSuccessful(true);
+        clearCart();
+      }, 2000);
+    }
   };
 
   const closeModal = () => {
     setCheckoutSuccessful(false);
+    setError('');
     onClose();
   };
 
@@ -45,10 +53,19 @@ const CheckoutModal = ({ isOpen, onClose, onCheckoutSuccess }) => {
           <div className="flex flex-col gap-y-2">
             <input
               type="text"
+              name="fullName"
+              value={shippingInfo.fullName}
+              onChange={handleInputChange}
+              placeholder="Full Name"
+              required
+            />
+            <input
+              type="text"
               name="shippingAddress"
               value={shippingInfo.shippingAddress}
               onChange={handleInputChange}
               placeholder="Shipping Address"
+              required
             />
             <input
               type="text"
@@ -56,8 +73,24 @@ const CheckoutModal = ({ isOpen, onClose, onCheckoutSuccess }) => {
               value={shippingInfo.billingAddress}
               onChange={handleInputChange}
               placeholder="Billing Address"
+              required
             />
-            {/* Add more input fields for shipping and billing info */}
+            <input
+              type="text"
+              name="city"
+              value={shippingInfo.city}
+              onChange={handleInputChange}
+              placeholder="City"
+              required
+            />
+            <input
+              type="text"
+              name="state"
+              value={shippingInfo.state}
+              onChange={handleInputChange}
+              placeholder="State"
+              required
+            />
           </div>
           <div className="font-semibold">
             <span>Total:</span> $ {parseFloat(total).toFixed(2)}
@@ -65,6 +98,7 @@ const CheckoutModal = ({ isOpen, onClose, onCheckoutSuccess }) => {
           <div onClick={clearCart} className="cursor-pointer py-4 bg-red-500 text-white w-12 h-12 flex justify-center items-center text-xl">
             <FiTrash2 />
           </div>
+          {error && <div className="text-red-500">{error}</div>} {/* Display error message */}
           <button onClick={handleCheckout} className="bg-primary flex p-4 justify-center items-center text-white w-full font-medium">
             Checkout
           </button>
